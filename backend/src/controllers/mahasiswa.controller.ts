@@ -59,6 +59,8 @@ export const getAllMahasiswa = async (req: Request, res: Response) => {
   } catch (error) {
     res.status(500).json({ message: "Terjadi kesalahan server" });
   }
+};
+
 export const createMahasiswa = async (req: Request, res: Response) => {
   try {
     const { nim, nama, prodi_id, angkatan } = req.body;
@@ -93,6 +95,7 @@ export const createMahasiswa = async (req: Request, res: Response) => {
     res.status(500).json({ message: "Terjadi kesalahan server" });
   }
 };
+
 export const updateMahasiswa = async (req: Request, res: Response) => {
   try {
     const { id } = req.params;
@@ -123,4 +126,21 @@ export const updateMahasiswa = async (req: Request, res: Response) => {
   }
 };
 
+export const deleteMahasiswa = async (req: Request, res: Response) => {
+  try {
+    const { id } = req.params;
+
+    const [result]: any = await db.query(
+      "DELETE FROM mahasiswa WHERE id = ?",
+      [id]
+    );
+
+    if (result.affectedRows === 0) {
+      return res.status(404).json({ message: "Mahasiswa tidak ditemukan" });
+    }
+
+    res.json({ message: "Mahasiswa berhasil dihapus" });
+  } catch (error) {
+    res.status(500).json({ message: "Terjadi kesalahan server" });
+  }
 };

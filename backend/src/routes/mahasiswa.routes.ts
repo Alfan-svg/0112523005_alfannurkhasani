@@ -5,7 +5,7 @@ import {
   updateMahasiswa,
   deleteMahasiswa,
 } from "../controllers/mahasiswa.controller";
-import { uploadFotoMahasiswa } from "../middlewares/upload.middleware";
+import { uploadFotoMahasiswa } from "../middleware/uploads.middleware";
  
 const router = Router();
  
