@@ -1,3 +1,4 @@
+import dotenv from "dotenv";
 import express, { Request, Response } from "express";
 import cors from "cors";
 import path from "path";
@@ -6,13 +7,27 @@ import prodiRoutes from "./routes/prodi.routes";
 import authRoutes from "./routes/auth.routes";
 import userRoutes from "./routes/user.routes";
  
+dotenv.config();
+
 const app = express();
  
-app.use(cors({
-  origin: "http://localhost:3001",
-  methods: ["GET", "POST", "PUT", "DELETE", "PATCH"],
-  allowedHeaders: ["Content-Type", "Authorization"],
-}));
+const frontendOrigins = process.env.FRONTEND_URL
+  ? process.env.FRONTEND_URL.split(",").map((value) => value.trim())
+  : ["http://localhost:3000", "http://localhost:3002"];
+
+app.use(
+  cors({
+    origin: (origin, callback) => {
+      if (!origin || frontendOrigins.includes(origin)) {
+        callback(null, true);
+      } else {
+        callback(new Error("Not allowed by CORS"));
+      }
+    },
+    methods: ["GET", "POST", "PUT", "DELETE", "PATCH"],
+    allowedHeaders: ["Content-Type", "Authorization"],
+  })
+);
  
 app.use(express.json());
  
